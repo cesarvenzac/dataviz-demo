@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Demo</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+        <script src="https://cdn.jsdelivr.net/npm/neo4jd3@0.0.5/dist/js/neo4jd3.min.js"></script>
+        <script src="https://unpkg.com/force-graph"></script>
+        <script src="https://unpkg.com/3d-force-graph"></script>
+        
+        <!-- <script src="https://unpkg.com/neovis.js@2.0.2"></script>
+        <script type="text/javascript">
+            let neoViz;
+
+            function draw() {
+                const config = {
+                    containerId: "content",
+                    neo4j: {
+                        serverUrl: "bolt://44.202.184.39:7687",
+                        serverUser: "neo4j",
+                        serverPassword: "needs-slide-fireballs",
+                        driverConfig: { 
+                            encrypted: "ENCRYPTION_ON",
+                            trust: "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES"
+                        } 
+                    },
+                    labels: {
+                        Character: {
+                            label: "name",
+                            value: "pagerank",
+                            group: "community",
+                            [NeoVis.NEOVIS_ADVANCED_CONFIG]: {
+                                function: {
+                                    title: (node) => content.nodeToHtml(node, [
+                                        "name",
+                                        "pagerank"
+                                    ])
+                                }
+                            }
+                        }
+                    },
+                    relationships: {
+                        INTERACTS: {
+                            value: "weight"
+                        }
+                    },
+                    initialCypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN *"
+                };
+
+                neoViz = new NeoVis.default(config);
+                neoViz.render();
+            }
+        </script> -->
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <nav>
+            <ul>
+                <li id="neovis" onclick="callNeovis()">
+                    neovis
+                </li>
+                <li id="force-graph" onclick="callForceGraph(firstData)">
+                    force-graph (Les Misérables)
+                </li>
+                <li id="force-graph" onclick="callForceGraph(secondData)">
+                    force-graph (NBA Points 2017)
+                </li>
+                <li id="force-graph" onclick="callForceGraph(thirdData)">
+                    force-graph (Blocks)
+                </li>
+                <li id="3d-force-graph" onclick="call3DForceGraph(firstData)">
+                    3d-force-graph (Les Misérables)
+                </li>
+                <li id="3d-force-graph" onclick="call3DForceGraph(secondData)">
+                    3d-force-graph (NBA Points 2017)
+                </li>
+                <li id="3d-force-graph" onclick="call3DForceGraph(thirdData)">
+                    3d-force-graph (Blocks)
+                </li>
+            </ul>
+        </nav>
+
+        <div id="container">
+            <div id="inputs">
+                <div id="date">
+                    <button id="placeholder" onclick="enableTimeSelector(this)">Last 1 hour</button>
+                    <!-- Make a compact calendar -->
+                    <div id="time-selector-panel">
+                        <div id="custom-date-picker">
+                            <div id="months-picker">
+                                <span class="material-symbols-outlined">arrow_left</span>
+                                <span>Month</span>
+                                <span class="material-symbols-outlined">arrow_right</span>
+                            </div>
+                            <div id="days-picker">
+                                <span>1</span>
+                                <span>2</span>
+                                <span>3</span>
+                                <span>4</span>
+                                <span>5</span>
+                                <span>6</span>
+                                <span>7</span>
+                                <span>8</span>
+                                <span>9</span>
+                                <span>10</span>
+                                <span>11</span>
+                                <span>12</span>
+                                <span>13</span>
+                                <span>14</span>
+                                <span>15</span>
+                                <span>16</span>
+                                <span>17</span>
+                                <span>18</span>
+                                <span>19</span>
+                                <span>20</span>
+                                <span>21</span>
+                                <span>22</span>
+                                <span>23</span>
+                                <span>24</span>
+                                <span>25</span>
+                                <span>26</span>
+                                <span>27</span>
+                                <span>28</span>
+                                <span>29</span>
+                                <span>30</span>
+                                <span>31</span>
+                            </div>
+                            <div>
+                                <input id="range-start-date" type="time">
+                                <input id="range-start-date" type="time">
+                            </div>
+                        </div>
+                        <div id="custom-range">
+                            <span>Custom range</span>
+                            <span>Start date</span>
+                            <input id="range-start-date" type="date" placeholder="Start date">
+                            <span id="date-warning">Start date can't be after End date</span>
+                            <span>End date</span>
+                            <input id="range-end-date" type="date" placeholder="End date">
+                            <span id="date-warning">End date can't be before Start date</span>
+                            <button onclick="enableTimeSelector()">Apply</button>
+                            <span id="date-error">Missing value(s)</span>
+                            <ul>
+                                <span>Recently used</span>
+                                <li>from 12-03-2023 08:12 to 12-03-2023 08:15</li>
+                                <li>last week</li>
+                                <li>from 12-03-2023 08:12 to 12-03-2023 08:15</li>
+                                <li>from 12-03-2023 08:12 to 12-03-2023 08:15</li>
+                                <li>from 12-03-2023 08:12 to 12-03-2023 08:15</li>
+                                <li>from 12-03-2023 08:12 to 12-03-2023 08:15</li>
+                            </ul>
+                        </div>
+                        <div id="premade-range">
+                            <span>Premade range</span>
+                            <input type="text" placeholder="Search">
+                            <!-- <button onclick="enableTimeSelector()">+ Add a range</button> -->
+                            <button onclick="enableTimeSelector(this)">Last 5 minutes</button>
+                            <button onclick="enableTimeSelector(this)">Last 15 minutes</button>
+                            <button onclick="enableTimeSelector(this)">Last 30 minutes</button>
+                            <button onclick="enableTimeSelector(this)">Last 1 hour</button>
+                            <button onclick="enableTimeSelector(this)">Last 2 hours</button>
+                            <button onclick="enableTimeSelector(this)">Last 12 hours</button>
+                            <button onclick="enableTimeSelector(this)">Last 24 hours</button>
+                            <button onclick="enableTimeSelector(this)">Last 2 days</button>
+                            <button onclick="enableTimeSelector(this)">Last week</button>
+                            <button onclick="enableTimeSelector(this)">Last 2 weeks</button>
+                            <button onclick="enableTimeSelector(this)">Last month</button>
+                            <button onclick="enableTimeSelector(this)">Last 2 months</button>
+                            <button onclick="enableTimeSelector(this)">Last 6 months</button>
+                            <button onclick="enableTimeSelector(this)">Last year</button>
+                            <button onclick="enableTimeSelector(this)">Last 2 years</button>
+                        </div>
+                    </div>
+                </div>
+
+                <input id="query" type="text" placeholder="$ query">
+                <!-- Replace input type date by custom div opening a dropdown menu with button to select time range, and 2 inputs date to select a custom time range -->
+                
+                <!-- <input id="date" type="text" placeholder="Last 1 hour" onfocus="(this.type='date')" onblur="(this.type='text')"> -->
+            </div>
+            <div id="visualizer">
+                <div id="informations"></div>
+                <div id="settings" data-state="close">
+                    <div id="cta">
+                        <button onclick="fitGraphOnScreen()"><span class="material-symbols-outlined">
+                            <span class="material-symbols-outlined">zoom_in_map</span>
+                        </button>
+                        <button onclick="openSettings()">
+                            <span class="material-symbols-outlined">settings</span>
+                        </button>    
+                    </div>
+                    <div id="parameters">
+                        <ul id="category" class="dropdown">
+                            <span id="category-title" onclick="enableDropdown(this)">Settings</span>
+                            <li class="dropdown-content">
+                                <span>nodeSize</span> 
+                                <input id="node-size" type="range" min="0" max="10" onchange="nodeSizeUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>nodeColor</span> 
+                                <input id="node-color" type="color" onchange="nodeColorUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>backgroundColor</span> 
+                                <input id="background-color" type="color" onchange="backgroundColorUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>linkWidth</span> 
+                                <input id="link-width" type="range" min="0" max="10" onchange="linkWidthUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>linkColor</span> 
+                                <input id="link-color" type="color" onchange="linkColorUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>linkDirectionalArrowLength</span> 
+                                <input id="link-arrow-length" type="range" min="0" max="25" onchange="linkArrowLengthUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>linkDirectionalArrowRelPos</span> 
+                                <input id="link-arrow-pos" type="range" min="0" max="1" step="0.5" onchange="linkArrowPosUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>linkDirectionalArrowColor</span> 
+                                <input id="link-arrow-color" type="color" onchange="linkArrowColorUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>linkCurvature</span> 
+                                <input id="link-curvature" type="range" min="0" max="1" step="0.2" onchange="linkCurvatureUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>linkParticles</span> 
+                                <input id="link-particles" type="range" min="0" max="10" onchange="linkParticlesUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>linkParticlesWidth</span> 
+                                <input id="link-particles-width" type="range" min="0" max="25" onchange="linkParticlesWidthUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>linkParticlesSpeed</span> 
+                                <input id="link-particles-speed" type="range" min="0" max="0.05" step="0.01" onchange="linkParticlesSpeedUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>linkParticlesColor</span> 
+                                <input id="link-particles-color" type="color" onchange="linkParticlesColorUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                        </ul>
+                        
+                        <ul id="category" class="dropdown">
+                            <span id="category-title" onclick="enableDropdown(this)">Advanced settings</span>
+                            <li class="dropdown-content">
+                                <span>d3ForceLink</span> 
+                                <input id="force-link" type="range" min="1" max="100" onchange="forceLinkUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>d3ForceCharge</span> 
+                                <input id="force-charge" type="range" min="1" max="100" onchange="forceChargeUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>d3ForceCollision</span> 
+                                <input id="force-collision" type="range" min="1" max="100" onchange="forceCollisionUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>d3ForceManyBody</span> 
+                                <input id="force-manybody" type="range" min="1" max="100" onchange="forceManyBodyUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                            <li class="dropdown-content">
+                                <span>d3ForceRadial</span> 
+                                <input id="force-radial" type="range" min="1" max="1000" onchange="forceRadialUpdate(this.value)" oninput="this.nextElementSibling.value = this.value">
+                                <output></output>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div id="content"></div>
+            </div>
+            <span id="title">Neovis visualizer</span>
+        </div>
+
+        <script src="scripts.js"></script>
+        <script src="data.js"></script>
+        <script src="nba-data.js"></script>
+        <script src="blocks-data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-force@3"></script>
+        <script>
+            secondData.nodes.forEach(function(d) {
+                secondData.nodes.forEach(function(p) {
+                    if (p.id != d.id && p.action_type == d.action_type && p.group == d.group) {
+                        secondData.links.push({source: d.id, target: p.id}); 
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
